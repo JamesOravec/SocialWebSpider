@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.uci.ics.crawler4j.examples.imagecrawler;
+package edu.unlv.cs673.socialwebspider.spider;
 
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
@@ -33,16 +33,18 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
  */
 
 public class ImageCrawlController {
+	
+	public void startNewCrawler(String rootFolder, String numberOfCrawlers, String storageFolder){
+		
+	}
+	
 
-	public static void main(String[] args) throws Exception {
+	public static void main(final String[] args) throws Exception {
 		if (args.length < 3) {
 			System.out.println("Needed parameters: ");
-			System.out
-					.println("\t rootFolder (it will contain intermediate crawl data)");
-			System.out
-					.println("\t numberOfCralwers (number of concurrent threads)");
-			System.out
-					.println("\t storageFolder (a folder for storing downloaded images)");
+			System.out.println("\t rootFolder (it will contain intermediate crawl data)");
+			System.out.println("\t numberOfCralwers (number of concurrent threads)");
+			System.out.println("\t storageFolder (a folder for storing downloaded images)");
 			return;
 		}
 		String rootFolder = args[0];
@@ -50,13 +52,12 @@ public class ImageCrawlController {
 		String storageFolder = args[2];
 
 		CrawlConfig config = new CrawlConfig();
-		
+
 		config.setCrawlStorageFolder(rootFolder);
 
 		// Additional Configs
 		config.setMaxDepthOfCrawling(9);
 		config.setPolitenessDelay(1);
-		
 
 		/*
 		 * Since images are binary content, we need to set this parameter to
@@ -64,16 +65,15 @@ public class ImageCrawlController {
 		 */
 		config.setIncludeBinaryContentInCrawling(true);
 
-		//String[] crawlDomains = new String[] { "http://uci.edu/" };
-		//String[] crawlDomains = new String[] { "http://www.jamesoravec.com" };
+		// String[] crawlDomains = new String[] { "http://uci.edu/" };
+		// String[] crawlDomains = new String[] { "http://www.jamesoravec.com"
+		// };
 		String[] crawlDomains = new String[] { "http://www.funnypix.ca/main.php" };
 
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig,
-				pageFetcher);
-		CrawlController controller = new CrawlController(config, pageFetcher,
-				robotstxtServer);
+		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
+		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 		for (String domain : crawlDomains) {
 			controller.addSeed(domain);
 		}
