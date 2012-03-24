@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package edu.unlv.cs673.socialwebspider.spider;
+package edu.unlv.cs673.socialwebspider.spider.controller;
 
 import java.io.File;
 import java.util.regex.Pattern;
@@ -25,29 +25,27 @@ import edu.uci.ics.crawler4j.crawler.WebCrawler;
 import edu.uci.ics.crawler4j.parser.BinaryParseData;
 import edu.uci.ics.crawler4j.url.WebURL;
 import edu.uci.ics.crawler4j.util.IO;
+import edu.unlv.cs673.socialwebspider.spider.Cryptography;
 
 /**
+ * The following file is based on the ImageCrawlController example provided 
+ * by the crawler4j website. It has been modified so that it works with our project.
+ *
  * Updates/Modifications by: James Oravec (http://www.jamesoravec.com)
- * 
- * Original Notes: 
- * This class shows how you can crawl images on the web and store them in a
- * folder. This is just for demonstration purposes and doesn't scale for large
- * number of images. For crawling millions of images you would need to store
- * downloaded images in a hierarchy of folders
- * 
- * @author Yasser Ganjisaffar <lastname at gmail dot com>
  */
-public class ImageCrawler extends WebCrawler {
+public class CrawlerImagesOnlyImpl extends WebCrawler {
 
-	private static final Pattern filters = Pattern.compile(".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+	private static final Pattern patternToFilterOut = Pattern.compile(".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
 
-	private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
+	private static final Pattern patternToSave = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
 
 	private static File storageFolder;
 	private static String[] crawlDomains;
+	
+	final static int MIN_IMAGE_SIZE = 10 * 1024 * 10;
 
 	public static void configure(final String[] crawlDomains, final String storageFolderName) {
-		ImageCrawler.crawlDomains = crawlDomains;
+		CrawlerImagesOnlyImpl.crawlDomains = crawlDomains;
 
 		storageFolder = new File(storageFolderName);
 		if (!storageFolder.exists()) {
@@ -58,11 +56,11 @@ public class ImageCrawler extends WebCrawler {
 	@Override
 	public final boolean shouldVisit(final WebURL url) {
 		String href = url.getURL().toLowerCase();
-		if (filters.matcher(href).matches()) {
+		if (patternToFilterOut.matcher(href).matches()) {
 			return false;
 		}
 
-		if (imgPatterns.matcher(href).matches()) {
+		if (patternToSave.matcher(href).matches()) {
 			return true;
 		}
 
@@ -83,13 +81,13 @@ public class ImageCrawler extends WebCrawler {
 			return;
 		}
 
-		if (!imgPatterns.matcher(url).matches()) {
+		if (!patternToSave.matcher(url).matches()) {
 			return;
 		}
 
 		// Not interested in very small images
 		// if (page.getContentData().length < 10 * 1024) {
-		if (page.getContentData().length < 10 * 1024 * 70) {
+		if (page.getContentData().length < MIN_IMAGE_SIZE) {
 			return;
 		}
 

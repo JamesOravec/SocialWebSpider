@@ -1,6 +1,6 @@
-package edu.unlv.cs673.socialwebspider.spider.types;
+package edu.unlv.cs673.socialwebspider.spider.controller;
 
-public interface SpiderController {
+public interface CrawlerController {
 	public void startSpider();
 	public void storeSpiderResults();
 	public void finishSpider();
