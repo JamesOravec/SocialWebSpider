@@ -1,0 +1,46 @@
+The following are notes related to the spider portion of the project. They are meant to be crib notes for
+various portions of the project. They are not meant to be formal documenation.
+ 
+
+Crawler4j
+	http://code.google.com/p/crawler4j/
+		Must download both crawler4j-3.3.zip and crawler4j-3.x-dependencies.zip
+		
+To run image crawler example
+	edu.uci.ics.crawler4j.examples.imagecrawler.ImageCrawlController
+		arguments: root 1 images 
+		
+		
+http://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html		
+http://forum.springsource.org/showthread.php?110717-can-t-determine-annotations-of-missing-type-javax-persistence-Entity-when-weaving
+
+Eclipse Check Style:
+	http://eclipse-cs.sourceforge.net/
+	http://eclipse-cs.sourceforge.net/downloads.html
+	
+	Check Style Notes to team:
+		Hey All,
+		
+		In order to ensure good programming standards for stuff we program. I would recommend installing the eclipse "check style" plugin for eclipse. I know Matt uses this and it should get your code more to his coding standards. You can look at how to install the plugin at: http://eclipse-cs.sourceforge.net/downloads.html
+		
+		Once installed, it'll require a reboot. After that you'll be able right click on your java files and towards the bottom you should see, CheckStyle --> Check Code with Check Style. Once you select this, you'll get more feedback/suggestions from Eclipse on how to improve your code. You can even select multiple files in the package explorer and do this for quick feedback. Once done, you can look at the java file and see the various suggestions. 
+		
+		I'm a bit lazy, so I like using the following shortcut keys to help do a lot of repetitive things to ensure good quality of code:
+		1) Check the various files with check style, then go into the files and do the following.
+		2) Ctrl+Alt+C - This auto fixes some of the items that check style finds.
+		3) Ctrl+Shift+F (With nothing selected). This will format the whole java file with proper indentations.
+		4) Ctrl+S - Saves the changes, so can recheck with check style and see what is left to fix.
+		5) Recheck the files using check style.
+		
+		Have fun,
+		James
+		
+C:\Users\Admin\Documents\workspace-sts-2.8.1.RELEASE
+cd SocialWebSpider
+ git init
+  touch README
+  git add README
+  git commit -m 'first commit'
+  git remote add origin git@github.com:JamesOravec/SocialWebSpider.git
+  git push -u origin master
+	
