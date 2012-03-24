@@ -4,7 +4,8 @@ import static org.junit.Assert.*;
 
 import org.junit.Test;
 
-import edu.unlv.cs673.socialwebspider.spider.controller.CrawlerImagesOnlyControllerImpl;
+import edu.unlv.cs673.socialwebspider.spider.controller.BinarySizes;
+import edu.unlv.cs673.socialwebspider.spider.controller.CrawlerControllerImpl;
 import edu.unlv.cs673.socialwebspider.uuid.UUIDFactoryImpl;
 
 public class ImageCrawlControllerTest {
@@ -19,9 +20,10 @@ public class ImageCrawlControllerTest {
 		System.out.println("configFolder: " + configFolder);
 		System.out.println("storageFolder: " + storageFolder);
 
-		CrawlerImagesOnlyControllerImpl crawlController = new CrawlerImagesOnlyControllerImpl();
+		CrawlerControllerImpl crawlController = new CrawlerControllerImpl();
 		try {
-			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php");
+			//crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php");
+			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php", BinarySizes.twentyKb);
 		} catch (Exception e) {
 			fail("Exception occurred during crawling.");
 		}

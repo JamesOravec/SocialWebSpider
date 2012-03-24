@@ -33,20 +33,30 @@ import edu.unlv.cs673.socialwebspider.spider.Cryptography;
  *
  * Updates/Modifications by: James Oravec (http://www.jamesoravec.com)
  */
-public class CrawlerImagesOnlyImpl extends WebCrawler {
+public class CrawlerImpl extends WebCrawler {
 
-	private static final Pattern patternToFilterOut = Pattern.compile(".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
-
-	private static final Pattern patternToSave = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
-
-	private static File storageFolder;
-	private static String[] crawlDomains;
+	private File storageFolder;
+	private String[] crawlDomains;
+	private Pattern patternToFilterOut;
+	private Pattern patternToSave;
+	private int minImageSize;
 	
-	final static int MIN_IMAGE_SIZE = 10 * 1024 * 10;
-
-	public static void configure(final String[] crawlDomains, final String storageFolderName) {
-		CrawlerImagesOnlyImpl.crawlDomains = crawlDomains;
-
+	/**
+	 * Used to setup and configure the crawler.
+	 *
+	 * @param filterOutPatterns
+	 * @param savePatterns
+	 * @param minImageSize
+	 * @param minImageSize
+	 * @param crawlDomains
+	 * @param storageFolderName
+	 */
+	CrawlerImpl(String filterOutPatterns, String savePatterns, int minImageSize, 
+			final String[] crawlDomains, final String storageFolderName ){
+		this.patternToFilterOut = Pattern.compile(filterOutPatterns);
+		this.patternToSave = Pattern.compile(savePatterns);
+		this.minImageSize = minImageSize;
+		this.crawlDomains = crawlDomains;
 		storageFolder = new File(storageFolderName);
 		if (!storageFolder.exists()) {
 			storageFolder.mkdirs();
@@ -76,7 +86,7 @@ public class CrawlerImagesOnlyImpl extends WebCrawler {
 	public final void visit(final Page page) {
 		String url = page.getWebURL().getURL();
 
-		// We are only interested in processing images
+		// We are only interested in processing binaries
 		if (!(page.getParseData() instanceof BinaryParseData)) {
 			return;
 		}
@@ -85,9 +95,8 @@ public class CrawlerImagesOnlyImpl extends WebCrawler {
 			return;
 		}
 
-		// Not interested in very small images
-		// if (page.getContentData().length < 10 * 1024) {
-		if (page.getContentData().length < MIN_IMAGE_SIZE) {
+		// Not interested in very small binaries.
+		if (page.getContentData().length < minImageSize) {
 			return;
 		}
 
