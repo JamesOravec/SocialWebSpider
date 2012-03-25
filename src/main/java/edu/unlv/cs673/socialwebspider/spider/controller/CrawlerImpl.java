@@ -44,8 +44,8 @@ public class CrawlerImpl extends WebCrawler {
 	private int minImageSize;
 	
 	// These are patterns that need to be changed for different filtering.
-	private static Pattern patternToFilterOut = Pattern.compile(Patterns.filterOutNonImages);
-	private static Pattern patternToSave = Pattern.compile(Patterns.patternImage);
+	private static Pattern patternToFilterOut = Pattern.compile(Patterns.filterOutNonGeneral);
+	private static Pattern patternToSave = Pattern.compile(Patterns.patternGeneral);
 
 	/**
 	 * Used to setup and configure the crawler.

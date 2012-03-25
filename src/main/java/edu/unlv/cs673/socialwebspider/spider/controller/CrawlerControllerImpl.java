@@ -17,13 +17,9 @@
 
 package edu.unlv.cs673.socialwebspider.spider.controller;
 
-import java.util.regex.Pattern;
-
 import edu.uci.ics.crawler4j.crawler.CrawlConfig;
 import edu.uci.ics.crawler4j.crawler.CrawlController;
-import edu.uci.ics.crawler4j.fetcher.PageFetcher;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
-import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
+import edu.unlv.cs673.database.BlobHandler;
 
 /**
  * The following file is based on the ImageCrawlController example provided by
@@ -32,15 +28,17 @@ import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
  * 
  * Updates/Modifications by: James Oravec (http://www.jamesoravec.com)
  */
-public class CrawlerControllerImpl implements CrawlerController {
+public class CrawlerControllerImpl extends AbstractCrawlerController implements CrawlerController {
+
 	public CrawlerControllerImpl() {
 	}
 
 	@Override
-	public final void startSpider(final String configFolder, final int numberOfCrawlers, final String storageFolder, final int maxDepth, final int politenessDelay, final String entryPoint,
-			final int minBinarySize) throws Exception {
+	public final void startSpider(final int userId, final int userSpecificCategoryId, final String configFolder, final int numberOfCrawlers, final String storageFolder, final int maxDepth,
+			final int politenessDelay, final String entryPoint, final int minBinarySize) throws Exception {
 		startNewCrawler(configFolder, numberOfCrawlers, storageFolder, maxDepth, politenessDelay, entryPoint, minBinarySize);
-		storeSpiderResults(storageFolder);
+		bh = new BlobHandler();
+		storeSpiderResults(userId, userSpecificCategoryId, storageFolder);
 		finishSpider();
 	}
 
@@ -72,35 +70,12 @@ public class CrawlerControllerImpl implements CrawlerController {
 	public final void startNewCrawler(final String configFolder, final int numberOfCrawlers, final String storageFolder, final int maxDepth, final int politenessDelay, final String entryPoint,
 			final int minBinarySize) throws Exception {
 
-		CrawlConfig config = new CrawlConfig();
-		config.setCrawlStorageFolder(configFolder);
-		config.setMaxDepthOfCrawling(maxDepth);
-		config.setPolitenessDelay(politenessDelay);
-		/**
-		 * Binary content requires the following line to be set to true.
-		 */
-		config.setIncludeBinaryContentInCrawling(true);
-
+		CrawlConfig config = setupCrawlConfig(configFolder, maxDepth, politenessDelay);
 		String[] crawlDomains = new String[] { "" + entryPoint };
-		PageFetcher pageFetcher = new PageFetcher(config);
-		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
-		RobotstxtServer robotstxtServer = new RobotstxtServer(robotstxtConfig, pageFetcher);
-		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
-		controller.addSeed(entryPoint);
+		CrawlController controller = setupCrawlController(entryPoint, config);
 
 		CrawlerImpl crawler = new CrawlerImpl(minBinarySize);
 		CrawlerImpl.configure(crawlDomains, storageFolder);
 		controller.start(CrawlerImpl.class, numberOfCrawlers);
 	}
-
-	@Override
-	public void storeSpiderResults(final String storageFolder) {
-		// TODO Auto-generated method stub
-	}
-
-	@Override
-	public void finishSpider() {
-		// TODO Auto-generated method stub
-	}
-
 }

@@ -17,15 +17,7 @@
 
 package edu.unlv.cs673.socialwebspider.spider.controller;
 
-import java.io.File;
 import java.util.regex.Pattern;
-
-import edu.uci.ics.crawler4j.crawler.Page;
-import edu.uci.ics.crawler4j.crawler.WebCrawler;
-import edu.uci.ics.crawler4j.parser.BinaryParseData;
-import edu.uci.ics.crawler4j.url.WebURL;
-import edu.uci.ics.crawler4j.util.IO;
-import edu.unlv.cs673.socialwebspider.spider.Cryptography;
 
 /**
  * The following file is based on the ImageCrawlController example provided by

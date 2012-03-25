@@ -8,41 +8,41 @@ import org.junit.Test;
 
 public class BlobHandlerTest {
 
-//	@Test
-//	public void insertRowTest() {
-//		try{
-//			BlobHandler b = new BlobHandler();
-//			b.insertRow(1, "jamesbtest1.jpg", "spider/images/jamesbtest1.jpg", "Picture of James, when he was skinny.");
-//	
-//			// Insert works so good to go.
-//			assert(true);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			fail("Error occurred when trying to upload a binary to the db.");
-//		}
-//	}
-//
-//	@Test
-//	public void getRowTest() {
-//		try{
-//			BlobHandler b = new BlobHandler();
-//			String currentDir = new File("").getAbsolutePath();
-//			System.out.println("currentDir: " + currentDir);
-//			
-//			String outputDir = "/spider/images/output";
-//			// Make sure out directory exists.
-//			File f = new File(outputDir);
-//			if(!f.exists()){
-//				f.mkdir();
-//			}
-//			
-//			b.getRow(2, currentDir + outputDir);
-//			assert(true);
-//		}catch(Exception e){
-//			e.printStackTrace();
-//			fail("Error occurred when trying to get binary from db.");
-//		}
-//	}
+	@Test
+	public void insertRowTest() {
+		try{
+			BlobHandler b = new BlobHandler();
+			b.insertRow(1, "jamesbtest1.jpg", "spider/images/jamesbtest1.jpg", "Picture of James, when he was skinny.");
+	
+			// Insert works so good to go.
+			assert(true);
+		}catch(Exception e){
+			e.printStackTrace();
+			fail("Error occurred when trying to upload a binary to the db.");
+		}
+	}
+
+	@Test
+	public void getRowTest() {
+		try{
+			BlobHandler b = new BlobHandler();
+			String currentDir = new File("").getAbsolutePath();
+			System.out.println("currentDir: " + currentDir);
+			
+			String outputDir = "/spider/images/output";
+			// Make sure out directory exists.
+			File f = new File(outputDir);
+			if(!f.exists()){
+				f.mkdir();
+			}
+			
+			b.getRow(2, currentDir + outputDir);
+			assert(true);
+		}catch(Exception e){
+			e.printStackTrace();
+			fail("Error occurred when trying to get binary from db.");
+		}
+	}
 	
 	@Test
 	public void insertBlobsFromFolderTest() {
