@@ -12,8 +12,8 @@ import javax.swing.SwingUtilities;
 /**
  * Modifications by James Oravec (http://www.jamesoravec.com)
  * 
- * Base code reference: This example uses a Java spider to scan a Web site and
- *  * check for broken links. Written by Jeff Heaton. Jeff Heaton is the author of
+ * Base code reference: This example uses a Java spider to scan a Web site and *
+ * check for broken links. Written by Jeff Heaton. Jeff Heaton is the author of
  * "Programming Spiders, Bots, and Aggregators" by Sybex. Jeff can be contacted
  * through his Web site at http://www.jeffheaton.com.
  * 
@@ -71,7 +71,7 @@ public class CheckLinks extends javax.swing.JFrame implements Runnable, ISpiderR
 
 	/**
 	 * Main method for the application.
-	 *
+	 * 
 	 * @param args
 	 *            Not used.
 	 */
@@ -227,7 +227,7 @@ public class CheckLinks extends javax.swing.JFrame implements Runnable, ISpiderR
 	/**
 	 * Called by the spider when a URL is found. It is here that links are
 	 * validated.
-	 *
+	 * 
 	 * @param base
 	 *            The page that the link was found on.
 	 * @param url

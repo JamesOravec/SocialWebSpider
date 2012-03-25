@@ -7,5 +7,5 @@ public interface UUIDFactory {
 	 * 
 	 * @return UUID as a String.
 	 */
-	public String generateUUID();
+	String generateUUID();
 }

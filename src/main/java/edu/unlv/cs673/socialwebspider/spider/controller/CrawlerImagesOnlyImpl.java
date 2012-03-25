@@ -34,87 +34,27 @@ import edu.unlv.cs673.socialwebspider.spider.Cryptography;
  * 
  * Updates/Modifications by: James Oravec (http://www.jamesoravec.com)
  */
-public class CrawlerImpl extends WebCrawler {
+public class CrawlerImagesOnlyImpl extends CrawlerImpl {
 	
-	public CrawlerImpl() {
-	}
-
-	private static File storageFolder;
-	private static String[] crawlDomains;
 	private int minImageSize;
 	
 	// These are patterns that need to be changed for different filtering.
 	private static Pattern patternToFilterOut = Pattern.compile(Patterns.filterOutNonImages);
 	private static Pattern patternToSave = Pattern.compile(Patterns.patternImage);
-
+	
+	public CrawlerImagesOnlyImpl() {
+		super();
+	}
+	
 	/**
 	 * Used to setup and configure the crawler.
 	 * 
 	 * @param minImageSize
 	 * @param storageFolderName
 	 */
-	CrawlerImpl(final int minImageSize) {
+	CrawlerImagesOnlyImpl(final int minImageSize) {
 		this.minImageSize = minImageSize;
 	}
 	
-	/**
-	 * This method is required by crawler4j.
-	 * 
-	 * @param crawlDomains The URLs that will get spidered.
-	 * @param storageFolderName Where to store the binaries to.
-	 */
-	public static void configure(String[] crawlDomains, String storageFolderName) {
-		CrawlerImpl.crawlDomains = crawlDomains;
-		storageFolder = new File(storageFolderName);
-		if (!storageFolder.exists()) {
-			storageFolder.mkdirs();
-		}
-	}
 
-	@Override
-	public final boolean shouldVisit(final WebURL url) {
-		String href = url.getURL().toLowerCase();
-		if (patternToFilterOut.matcher(href).matches()) {
-			return false;
-		}
-
-		if (patternToSave.matcher(href).matches()) {
-			return true;
-		}
-
-		for (String domain : crawlDomains) {
-			if (href.startsWith(domain)) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public final void visit(final Page page) {
-		String url = page.getWebURL().getURL();
-
-		// We are only interested in processing binaries
-		if (!(page.getParseData() instanceof BinaryParseData)) {
-			return;
-		}
-
-		if (!patternToSave.matcher(url).matches()) {
-			return;
-		}
-
-		// Not interested in very small binaries.
-		if (page.getContentData().length < minImageSize) {
-			return;
-		}
-
-		// get a unique name for storing this image
-		String extension = url.substring(url.lastIndexOf("."));
-		String hashedName = Cryptography.MD5(url) + extension;
-
-		// store image
-		IO.writeBytesToFile(page.getContentData(), storageFolder.getAbsolutePath() + "/" + hashedName);
-
-		System.out.println("Stored: " + url);
-	}
 }

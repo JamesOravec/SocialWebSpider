@@ -12,7 +12,7 @@ import edu.unlv.cs673.socialwebspider.uuid.UUIDFactoryImpl;
 public class FolderManipImpl implements FolderManip {
 
 	@Override
-	public void createFolder(String relativePath, String folderName) {
+	public final void createFolder(final String relativePath, final String folderName) {
 		String fullPath = relativePath + "/" + folderName;
 		try {
 			File folder = new File(fullPath);
@@ -24,7 +24,7 @@ public class FolderManipImpl implements FolderManip {
 	}
 
 	@Override
-	public void deleteFolder(String relativePath) {
+	public final void deleteFolder(final String relativePath) {
 		try {
 			File folder = new File(relativePath);
 			folder.delete();
@@ -35,11 +35,11 @@ public class FolderManipImpl implements FolderManip {
 	}
 
 	@Override
-	public String createUniqueFolder(String relativePath) {
+	public final String createUniqueFolder(final String relativePath) {
 		UUIDFactoryImpl uuid = new UUIDFactoryImpl();
 		String folderName = uuid.generateUUID();
-		createFolder(relativePath, folderName);		
+		createFolder(relativePath, folderName);
 		return folderName;
 	}
-	
+
 }

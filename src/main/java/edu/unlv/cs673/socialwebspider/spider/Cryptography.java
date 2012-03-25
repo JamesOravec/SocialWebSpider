@@ -35,7 +35,8 @@ public class Cryptography {
 	/**
 	 * Gets the MD5 hash.
 	 * 
-	 * @param str Input string.
+	 * @param str
+	 *            Input string.
 	 * @return
 	 */
 	public static String MD5(final String str) {
@@ -52,7 +53,8 @@ public class Cryptography {
 	/**
 	 * Returns a hex string from a byte array.
 	 * 
-	 * @param byteArray The byte array.
+	 * @param byteArray
+	 *            The byte array.
 	 * @return
 	 */
 	private static String hexStringFromBytes(final byte[] byteArray) {

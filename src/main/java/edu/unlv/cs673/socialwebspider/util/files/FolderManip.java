@@ -7,7 +7,7 @@ public interface FolderManip {
 	 * 
 	 * @param folder
 	 */
-	public void createFolder(String relativePath, String folderName);
+	void createFolder(String relativePath, String folderName);
 
 	/**
 	 * Deletes the folder based on the relative path given.

@@ -19,7 +19,7 @@ public class UUIDFactoryImpl implements UUIDFactory {
 	 * 
 	 * @return UUID as a String.
 	 */
-	public String generateUUID() {
+	public final String generateUUID() {
 		return String.valueOf(UUID.randomUUID());
 	}
 }

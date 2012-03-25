@@ -38,19 +38,14 @@ import edu.uci.ics.crawler4j.util.IO;
  */
 public class ImageCrawler extends WebCrawler {
 
-	private static final Pattern filters = Pattern
-			.compile(".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf"
-					+ "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
-
-	private static final Pattern imgPatterns = Pattern
-			.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
+	private static final Pattern filters = Pattern.compile(".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf" + "|rm|smil|wmv|swf|wma|zip|rar|gz))$");
+	private static final Pattern imgPatterns = Pattern.compile(".*(\\.(bmp|gif|jpe?g|png|tiff?))$");
 
 	private static File storageFolder;
 	private static String[] crawlDomains;
 
 	public static void configure(String[] crawlDomains, String storageFolderName) {
 		ImageCrawler.crawlDomains = crawlDomains;
-		
 
 		storageFolder = new File(storageFolderName);
 		if (!storageFolder.exists()) {
@@ -91,7 +86,7 @@ public class ImageCrawler extends WebCrawler {
 		}
 
 		// Not interested in very small images
-		//if (page.getContentData().length < 10 * 1024) {
+		// if (page.getContentData().length < 10 * 1024) {
 		if (page.getContentData().length < 10 * 1024 * 70) {
 			return;
 		}
@@ -101,8 +96,7 @@ public class ImageCrawler extends WebCrawler {
 		String hashedName = Cryptography.MD5(url) + extension;
 
 		// store image
-		IO.writeBytesToFile(page.getContentData(),
-				storageFolder.getAbsolutePath() + "/" + hashedName);
+		IO.writeBytesToFile(page.getContentData(), storageFolder.getAbsolutePath() + "/" + hashedName);
 
 		System.out.println("Stored: " + url);
 	}

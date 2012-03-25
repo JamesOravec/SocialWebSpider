@@ -3,12 +3,12 @@ package edu.unlv.cs673.socialwebspider.spider;
 import javax.swing.text.html.*;
 
 /**
- * The following is used in the crawler4j example.  
+ * The following is used in the crawler4j example.
  */
 public class HTMLParse extends HTMLEditorKit {
 
 	/**
-	 * Used for serialization. 
+	 * Used for serialization.
 	 */
 	private static final long serialVersionUID = 1L;
 

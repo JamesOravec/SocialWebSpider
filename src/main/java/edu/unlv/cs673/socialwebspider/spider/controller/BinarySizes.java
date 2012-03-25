@@ -1,6 +1,9 @@
 package edu.unlv.cs673.socialwebspider.spider.controller;
 
 public class BinarySizes {
+	public BinarySizes() {
+	}
+	
 	public static int tenKb = 10 * 1024;
 	public static int twentyKb = 20 * 1024;
 	public static int thirtyKb = 30 * 1024;
