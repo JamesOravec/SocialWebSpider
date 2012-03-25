@@ -20,29 +20,17 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 		super();
 	}
 
-	public void storeSpiderResults(int userId, int userSpecificCategoryId, String storageFolder) {
-
+	@Override
+	public void storeSpiderResults(int userId, String blobBinaryFolderPath, int userSpecificCategoryId) {
+			bh.insertBlobsFromFolder(userId, blobBinaryFolderPath, userSpecificCategoryId);
 	}
 
-	/**
-	 * Used for database connection clean up.
-	 */
+	@Override
 	public void finishSpider() {
 		bh.closeDbConn();
 	}
 
-	/**
-	 * Setups the CrawlConfig, needed and used by crawler4j.
-	 * 
-	 * @param configFolder
-	 *            A unique folder where crawler4j can store its configuration
-	 *            files.
-	 * @param maxDepth
-	 *            Max depth of spidering.
-	 * @param politenessDelay
-	 *            Politeness delay when spidering.
-	 * @return
-	 */
+	@Override
 	public CrawlConfig setupCrawlConfig(final String configFolder, final int maxDepth, final int politenessDelay) {
 		/**
 		 * Set up the config so crawler4j to do our bidding...
@@ -55,17 +43,7 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 		return config;
 	}
 
-	/**
-	 * Setups the CrawlController, needed and used by crawler4j.
-	 * 
-	 * @param entryPoint
-	 *            The entry point for our spidering.
-	 * @param config
-	 *            The CrawlConfig, used by crawler4j.
-	 * @return Returns the CrawlController that crawler4j can use.
-	 * @throws Exception
-	 *             Possible exceptions that can be thrown.
-	 */
+	@Override
 	public CrawlController setupCrawlController(final String entryPoint, CrawlConfig config) throws Exception {
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();

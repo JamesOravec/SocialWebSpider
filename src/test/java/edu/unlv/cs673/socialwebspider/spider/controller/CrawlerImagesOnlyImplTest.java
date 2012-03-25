@@ -14,11 +14,11 @@ public class CrawlerImagesOnlyImplTest {
 	 * pattern searches.
 	 */
 	@Test
-	public void test() {
-
+	public void startNewCrawlerTest() {
 		UUIDFactoryImpl UUIDFactory = new UUIDFactoryImpl();
-		String configFolder = "spider/configs/" + UUIDFactory.generateUUID();
-		String storageFolder = "spider/images/" + UUIDFactory.generateUUID();
+		String myUUID = UUIDFactory.generateUUID();
+		String configFolder = "spider/configs/" + myUUID;
+		String storageFolder = "spider/images/" + myUUID;
 
 		System.out.println("configFolder: " + configFolder);
 		System.out.println("storageFolder: " + storageFolder);
@@ -31,7 +31,28 @@ public class CrawlerImagesOnlyImplTest {
 		}
 
 		System.out.println("done");
-
 	}
+	
+	@Test
+	public void startSpiderTest() {
+		UUIDFactoryImpl UUIDFactory = new UUIDFactoryImpl();
+		String myUUID = UUIDFactory.generateUUID();
+		String configFolder = "spider/configs/" + myUUID;
+		String storageFolder = "spider/images/" + myUUID;
+
+		System.out.println("configFolder: " + configFolder);
+		System.out.println("storageFolder: " + storageFolder);
+
+		CrawlerImagesOnlyControllerImpl crawlController = new CrawlerImagesOnlyControllerImpl();
+		try {
+			crawlController.startSpider(3, -1134, configFolder, 1, storageFolder, 2, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
+		} catch (Exception e) {
+			fail("Exception occurred during crawling.");
+		}
+
+		System.out.println("done");
+	}
+	
+	
 
 }

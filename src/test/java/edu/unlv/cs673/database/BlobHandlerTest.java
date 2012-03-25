@@ -67,8 +67,5 @@ public class BlobHandlerTest {
 			fail("Error occurred when trying to get binary from db.");
 		}
 	}
-	
-	
-	
 
 }

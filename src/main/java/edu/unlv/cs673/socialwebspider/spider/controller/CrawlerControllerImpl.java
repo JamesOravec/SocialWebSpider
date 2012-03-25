@@ -42,35 +42,11 @@ public class CrawlerControllerImpl extends AbstractCrawlerController implements 
 			final int politenessDelay, final String entryPoint, final int minBinarySize) throws Exception {
 		startNewCrawler(configFolder, numberOfCrawlers, storageFolder, maxDepth, politenessDelay, entryPoint, minBinarySize);
 		bh = new BlobHandler();
-		storeSpiderResults(userId, userSpecificCategoryId, storageFolder);
+		storeSpiderResults(userId, storageFolder, userSpecificCategoryId);
 		finishSpider();
 	}
 
-	/**
-	 * The following is used to start a new crawl.
-	 * 
-	 * Example Values: configFolder spider/config/UUID numberOfCrawlers 1
-	 * storageFolder spider/images/UUID maxDepth 3 politenessDelay 200
-	 * entryPoint http://www.funnypix.ca/main.php
-	 * 
-	 * @param configFolder
-	 *            This is where the configuration settings are stored for a
-	 *            crawl.
-	 * @param numberOfCrawlers
-	 *            The number of crawlers (threads).
-	 * @param storageFolder
-	 *            Where the output of the spidering goes, e.g. images files.
-	 * @param maxDepth
-	 *            Max link depth from the entryPoint.
-	 * @param politenessDelay
-	 *            200 <-- Minimum for spidering laws.
-	 * @param entryPoint
-	 *            URL of where to start.
-	 * @param minBinarySize
-	 *            Minimum size of binary in bytes.
-	 * @throws Exception
-	 *             Possible exception that can be thrown.
-	 */
+	@Override
 	public final void startNewCrawler(final String configFolder, final int numberOfCrawlers, final String storageFolder, final int maxDepth, final int politenessDelay, final String entryPoint,
 			final int minBinarySize) throws Exception {
 

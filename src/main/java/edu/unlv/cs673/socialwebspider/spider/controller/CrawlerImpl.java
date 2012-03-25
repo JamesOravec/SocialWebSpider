@@ -47,15 +47,15 @@ public class CrawlerImpl extends WebCrawler {
 	private static String[] crawlDomains;
 	private int minImageSize;
 	
-	// These are patterns that need to be changed for different filtering.
+	// These are patterns that need to be changed for different filtering, used by crawler4j.
 	private static Pattern patternToFilterOut = Pattern.compile(Patterns.FILTER_OUT_NON_GENERAL);
 	private static Pattern patternToSave = Pattern.compile(Patterns.PATTERN_GENERAL);
 
 	/**
 	 * Used to setup and configure the crawler.
 	 * 
-	 * @param minImageSize
-	 * @param storageFolderName
+	 * @param minImageSize		Minimum size files we are interested in.
+	 * @param storageFolderName	Where to store the images from the spidering.
 	 */
 	CrawlerImpl(final int minImageSize) {
 		this.minImageSize = minImageSize;

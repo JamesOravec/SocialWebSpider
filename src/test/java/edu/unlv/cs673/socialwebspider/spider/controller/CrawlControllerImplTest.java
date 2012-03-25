@@ -14,8 +14,9 @@ public class CrawlControllerImplTest {
 	public final void test() {
 
 		UUIDFactoryImpl UUIDFactory = new UUIDFactoryImpl();
-		String configFolder = "spider/configs/" + UUIDFactory.generateUUID();
-		String storageFolder = "spider/images/" + UUIDFactory.generateUUID();
+		String myUUID = UUIDFactory.generateUUID();
+		String configFolder = "spider/configs/" + myUUID;
+		String storageFolder = "spider/images/" + myUUID;
 
 		System.out.println("configFolder: " + configFolder);
 		System.out.println("storageFolder: " + storageFolder);

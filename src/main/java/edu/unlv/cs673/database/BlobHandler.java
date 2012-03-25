@@ -111,12 +111,6 @@ public class BlobHandler {
 	 *            e.g. "Picture of James, when he was skinny."
 	 */
 	public void insertBinaryMin(int userId, String blobFileName, String blobBinaryFilePath, int userSpecificCategoryId) {
-		System.out.println("insertBinaryMin()");
-		System.out.println("userId: " + userId);
-		System.out.println("blobFileName: " + blobFileName);
-		System.out.println("blobBinaryFilePath: " + blobBinaryFilePath);
-		System.out.println("userSpecificCategoryId: " + userSpecificCategoryId);
-
 		String insertStmt = "INSERT INTO Blobs (userId, blobFileName, blobBinary, userSpecificCategoryId) VALUES(?, ?, ?, ?)";
 		String tableName = getTableName(insertStmt);
 		File blobFile = null;
