@@ -45,7 +45,7 @@ import java.util.StringTokenizer;
 public class BlobHandler {
 
 	private static final boolean DEBUG = true;
-	private static final String CLASS_NAME = null;
+	private static final String CLASS_NAME = "BlobHandler";
 
 	static private String dbUrl = "";
 	public static String query = "";
@@ -135,63 +135,19 @@ public class BlobHandler {
 		// Get table name for errors.
 		String tableName = getTableName(insertStmt);
 
-		/* Determine current path. */
-		// URL urlBlobInPath = this.getClass().getResource("/blobIn");
-		// URL urlBlobInPath = this.getClass().getResource("../spider/images");
-		// String currentDir = new File(".").getAbsolutePath();
-		// String currentDir = new
-		// File("../spider/images/jamesbtest1.jpg").getPath();
-		// String currentDir = new
-		// File("../spider/images/jamesbtest1.jpg").getAbsolutePath();
-		String currentDir = new File("spider/images/jamesbtest1.jpg").getAbsolutePath();
-		URL urlBlobInPath = null;
-		try {
-			// String path = "file:///" + currentDir + "/../spider/images";
-			String path = "file://localhost/" + currentDir;
-			System.out.println("before path: " + path);
-			path.replace("\\", "/"); // Change windows path slash to url forward
-										// slash.
-			System.out.println("after path: " + path);
-			urlBlobInPath = new URL(path);
-		} catch (Exception e) {
-			System.err.println("Error occured when trying to locate spider image directory.");
-			e.printStackTrace();
-		}
-
-		if (DEBUG) {
-			System.out.println("urlBlobInPath: " + urlBlobInPath.toString());
-		}
-		String EncodedBlobInPath = urlBlobInPath.getFile(); // String version
-															// offile name
-		if (DEBUG) {
-			System.out.println(CLASS_NAME + "." + METHOD_NAME + " -EncodedBlobInPath: " + EncodedBlobInPath);
-		}
-		String DecodedBlobInPath = null;
-		try {
-			DecodedBlobInPath = URLDecoder.decode(EncodedBlobInPath, "UTF-8");
-			if (DEBUG) {
-				System.out.println(CLASS_NAME + "." + METHOD_NAME + " - DecodedBlobInPath: " + DecodedBlobInPath);
-			}
-		} catch (UnsupportedEncodingException ue_excp) {
-			System.out.println(CLASS_NAME + " - Failed to decode file name " + EncodedBlobInPath + ". Error: " + ue_excp);
-			System.exit(16);
-		}
+		String currentFile = new File("spider/images/jamesbtest1.jpg").getAbsolutePath();
 
 		/* Set the host variables. */
-		// MemberName = "Dave G.";
 		MemberName = "Big Daddy O";
 		PictureFilename = "jamesbtest1.jpg";
-		PictureFile = new File(DecodedBlobInPath, PictureFilename);
+		PictureFile = new File(currentFile);
 		PFStream = null;
 		PictureCaption = "Picture of James, when he was skinny.";
 
 		try {
 			PFStream = new FileInputStream(PictureFile);
-		} catch (FileNotFoundException fnf_excp) {
-			String msg = CLASS_NAME + "." + METHOD_NAME + " - Error encountered while trying to create FileInputStream for PictureFile, " + PictureFilename + ". Error: " + fnf_excp;
-			System.err.println(msg);
-			fnf_excp.printStackTrace();
-			System.exit(16);
+		} catch (FileNotFoundException fnf) {
+			fnf.printStackTrace();
 		}
 
 		/* Insert a single row. */
@@ -207,30 +163,17 @@ public class BlobHandler {
 			insertResponse = pstmt01.executeUpdate();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
-				String msg = "Row cannot be added to table " + tableName + "because another row with this key already exists.";
-				System.err.println(msg);
-				return;
-			} else {
-				String msg = "Tried to store a picture for a new member. Error: " + sql_excp;
-				System.err.println(msg);
+				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
 				sql_excp.printStackTrace();
-				return;
+			} else {
+				System.err.println("Tried to store a picture for a new member. Error: " + sql_excp);
+				sql_excp.printStackTrace();
 			}
-		}
-
-		/*
-		 * If one row was successfully inserted, assume that the Insert worked
-		 * correctly. Otherwise, assume there was an error.
-		 */
-		if (insertResponse != 1) {
-			String msg = "The insert of a picture for a new member inserted " + insertResponse + " rows, not one.";
-			System.err.println(msg);
 		}
 
 		/* Dispose of the statement and commit. */
 		try {
 			pstmt01.close();
-			myConn.commit();
 			myConn.close();
 		} catch (SQLException sql_excp) {
 			String msg = "Tried to close the statement which inserted a picture file for a new member, commit the transaction, and close the connection. Error: " + sql_excp;
@@ -278,7 +221,7 @@ public class BlobHandler {
 
 		String tableName = "Blobs";
 		if (DEBUG) {
-			System.out.println(CLASS_NAME + "." + METHOD_NAME + " -tableName is " + tableName);
+			System.out.println(this.getClass().getName() + "." + METHOD_NAME + " -tableName is " + tableName);
 		}
 		String getStmt = "select member_name, picture_filename, picture, picture_caption, audio_filename, audio, audio_caption from " + tableName + " where member_name = ?";
 
