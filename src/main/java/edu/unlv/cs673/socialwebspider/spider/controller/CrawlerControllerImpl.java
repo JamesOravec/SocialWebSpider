@@ -72,17 +72,6 @@ public class CrawlerControllerImpl implements CrawlerController {
 	public final void startNewCrawler(final String configFolder, final int numberOfCrawlers, final String storageFolder, final int maxDepth, final int politenessDelay, final String entryPoint,
 			final int minBinarySize) throws Exception {
 
-		System.out.println("");
-		System.out.println("startNewCrawler() ");
-		System.out.println("configFolder: " + configFolder);
-		System.out.println("numberOfCrawlers: " + numberOfCrawlers);
-		System.out.println("storageFolder: " + storageFolder);
-		System.out.println("maxDepth: " + maxDepth);
-		System.out.println("politenessDelay: " + politenessDelay);
-		System.out.println("entryPoint: " + entryPoint);
-		System.out.println("minBinarySize: " + minBinarySize);
-		System.out.println("");
-
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(configFolder);
 		config.setMaxDepthOfCrawling(maxDepth);
@@ -99,31 +88,19 @@ public class CrawlerControllerImpl implements CrawlerController {
 		CrawlController controller = new CrawlController(config, pageFetcher, robotstxtServer);
 		controller.addSeed(entryPoint);
 
-		System.out.println("Patterns.filterOutNonImages: " + Patterns.filterOutNonImages);
-		System.out.println("Patterns.patternImage: " + Patterns.patternImage);
-		System.out.println("minBinarySize: " + minBinarySize);
-		System.out.println("");
 		CrawlerImpl crawler = new CrawlerImpl(minBinarySize);
-
-		System.out.println("crawlDomains: " + crawlDomains);
-		System.out.println("crawlDomains: " + crawlDomains.toString());
-		System.out.println("storageFolder: " + storageFolder);
-		System.out.println("");
 		CrawlerImpl.configure(crawlDomains, storageFolder);
-
 		controller.start(CrawlerImpl.class, numberOfCrawlers);
 	}
 
 	@Override
 	public void storeSpiderResults(final String storageFolder) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void finishSpider() {
 		// TODO Auto-generated method stub
-
 	}
 
 }

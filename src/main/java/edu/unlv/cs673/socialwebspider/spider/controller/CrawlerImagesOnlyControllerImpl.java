@@ -95,13 +95,11 @@ public class CrawlerImagesOnlyControllerImpl implements CrawlerController {
 	@Override
 	public void storeSpiderResults(final String storageFolder) {
 		// TODO Auto-generated method stub
-
 	}
 
 	@Override
 	public void finishSpider() {
 		// TODO Auto-generated method stub
-
 	}
 
 }
