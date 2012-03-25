@@ -91,6 +91,80 @@ public class BlobHandler {
 	}
 
 	/**
+	 * Inserts all files from a folder into the databse.
+	 * 
+	 * @param userId
+	 * @param blobBinaryFolderPath
+	 */
+	public void insertBlobsFromFolder(int userId, String blobBinaryFolderPath, int userSpecificCategoryId) {
+		
+		System.out.println("userId: " + userId);
+		System.out.println("blobBinaryFolderPath: " + blobBinaryFolderPath);
+		System.out.println("userSpecificCategoryId: " + userSpecificCategoryId);
+		
+		// Insert each binary into the db.
+		String fileName;
+		File folder = new File(blobBinaryFolderPath);
+		File[] listOfFiles = folder.listFiles();
+
+		for (int i = 0; i < listOfFiles.length; i++) {
+			if (listOfFiles[i].isFile()) {
+				fileName = listOfFiles[i].getName();
+				System.out.println(fileName);
+				insertBinaryMin(userId, fileName, blobBinaryFolderPath + "/" + fileName, userSpecificCategoryId);				
+			}
+		}
+	}
+	
+	/**
+	 * Inserts a blob into the database table.
+	 * 
+	 * @param userId
+	 *            Foreign key for user. e.g. 1
+	 * @param blobFileName
+	 *            e.g. "jamesbtest1.jpg"
+	 * @param blobBinaryFilePath
+	 *            e.g. "spider/images/jamesbtest1.jpg"
+	 * @param blobCaption
+	 *            e.g. "Picture of James, when he was skinny."
+	 */
+	public void insertBinaryMin(int userId, String blobFileName, String blobBinaryFilePath, int userSpecificCategoryId) {
+		System.out.println("insertBinaryMin()");
+		System.out.println("userId: " + userId);
+		System.out.println("blobFileName: " + blobFileName);
+		System.out.println("blobBinaryFilePath: " + blobBinaryFilePath);
+		System.out.println("userSpecificCategoryId: " + userSpecificCategoryId);
+		
+		String insertStmt = "INSERT INTO Blobs (userId, blobFileName, blobBinary, userSpecificCategoryId) VALUES(?, ?, ?, ?)";
+		String tableName = getTableName(insertStmt);
+		File blobFile = null;
+		blobFile = new File(blobBinaryFilePath);
+		FileInputStream fileInputStream = null;
+
+		/* Insert a single row. */
+		PreparedStatement pstmt01 = null;
+		try {
+			fileInputStream = new FileInputStream(blobFile);
+			pstmt01 = myConn.prepareStatement(insertStmt);
+			int ix = 1;
+			pstmt01.setInt(ix++, userId);
+			pstmt01.setString(ix++, blobFileName);
+			pstmt01.setBinaryStream(ix++, fileInputStream, blobFile.length());
+			pstmt01.setInt(ix++, userSpecificCategoryId);
+			pstmt01.executeUpdate();
+			pstmt01.close();
+		} catch (SQLException sql_excp) {
+			if (sql_excp.getSQLState().equals("23505")) {
+				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
+			} 
+			sql_excp.printStackTrace();
+		} catch (FileNotFoundException fnf) {
+			fnf.printStackTrace();
+		}
+	}
+	
+
+	/**
 	 * Inserts a blob into the database table.
 	 * 
 	 * @param userId
@@ -103,25 +177,16 @@ public class BlobHandler {
 	 *            e.g. "Picture of James, when he was skinny."
 	 */
 	public void insertRow(int userId, String blobFileName, String blobBinaryFilePath, String blobCaption) {
-		if (DEBUG) {
-			System.out.println("start insertRow()");
-		}
-
 		String insertStmt = "INSERT INTO Blobs (userId, blobFileName, blobBinary, blobCaption) VALUES(?, ?, ?, ?)";
 		String tableName = getTableName(insertStmt);
 		File blobFile = null;
 		blobFile = new File(blobBinaryFilePath);
 		FileInputStream fileInputStream = null;
 
-		try {
-			fileInputStream = new FileInputStream(blobFile);
-		} catch (FileNotFoundException fnf) {
-			fnf.printStackTrace();
-		}
-
 		/* Insert a single row. */
 		PreparedStatement pstmt01 = null;
 		try {
+			fileInputStream = new FileInputStream(blobFile);
 			pstmt01 = myConn.prepareStatement(insertStmt);
 			int ix = 1;
 			pstmt01.setInt(ix++, userId);
@@ -129,6 +194,8 @@ public class BlobHandler {
 			pstmt01.setBinaryStream(ix++, fileInputStream, (int) blobFile.length());
 			pstmt01.setString(ix++, blobCaption);
 			pstmt01.executeUpdate();
+			
+			pstmt01.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -137,20 +204,8 @@ public class BlobHandler {
 				System.err.println("Tried to store a picture for a new member. Error: " + sql_excp);
 				sql_excp.printStackTrace();
 			}
-		}
-
-		/* Dispose of the statement and commit. */
-		try {
-			pstmt01.close();
-			myConn.close();
-		} catch (SQLException sql_excp) {
-			String msg = "Tried to close the statement which inserted a picture file for a new member, commit the transaction, and close the connection. Error: " + sql_excp;
-			System.err.println(msg);
-			sql_excp.printStackTrace();
-		}
-
-		if (DEBUG) {
-			System.out.println("end insertRow()");
+		} catch (FileNotFoundException fnf) {
+			fnf.printStackTrace();
 		}
 	}
 
@@ -182,10 +237,6 @@ public class BlobHandler {
 	 * immediately below the directory containing my code.
 	 */
 	public void getRow(int blobId, String blobOutputDirectory) {
-		if (DEBUG) {
-			System.out.println("start getRow()");
-		}
-
 		String METHOD_NAME = "getRow()";
 		String blobFileName = "";
 
@@ -195,29 +246,19 @@ public class BlobHandler {
 		}
 		String getStmt = "SELECT userId, blobFileName, blobBinary FROM " + tableName + " WHERE blobId = ?";
 
-		/* Execute the query. */
 		PreparedStatement pstmt01 = null;
 		ResultSet rs = null;
-		try {
-			pstmt01 = conn01.prepareStatement(getStmt);
-			pstmt01.setInt(1, blobId);
-			rs = pstmt01.executeQuery();
-		} catch (SQLException sql_excp) {
-			if (sql_excp.getSQLState().equals("42S02")) {
-				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Desired row of table " + tableName + " not found. Error: " + sql_excp);
-				sql_excp.printStackTrace();
-			} else {
-				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Failed to retrieve desired row. Error: " + sql_excp);
-				sql_excp.printStackTrace();
-			}
-		}
 
-		/*
+		/* Execute the query.
+		 * 
 		 * Examine the result set, which should be a single row. The values from
 		 * the row are stored in Class variables.
 		 */
 		int rowCount = 0;
 		try {
+			pstmt01 = conn01.prepareStatement(getStmt);
+			pstmt01.setInt(1, blobId);
+			rs = pstmt01.executeQuery();
 			while (rs.next()) {
 				rowCount++;
 				blobFileName = rs.getString("blobFileName").trim();
@@ -229,35 +270,29 @@ public class BlobHandler {
 
 				writeBlobToFile(blobBinary, blobOutputFilePath);
 			}
+			pstmt01.close();
 		} catch (SQLException sql_excp) {
-			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Encountered SQLException while reading query result set. Error: " + sql_excp);
-			sql_excp.printStackTrace();
+			if (sql_excp.getSQLState().equals("42S02")) {
+				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Desired row of table " + tableName + " not found. Error: " + sql_excp);
+				sql_excp.printStackTrace();
+			} else {
+				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Error: " + sql_excp);
+				sql_excp.printStackTrace();
+			}
 		}
-
+		
 		if (rowCount != 1) {
 			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Query failed to return exactly one result row.");
-		}
-
-		/* Dispose of the statement. */
-		try {
-			pstmt01.close();
-			conn01.close();
-		} catch (SQLException sql_excp) {
-			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Tried to close the statement which got a picture of a new member, commit the transaction, and close the connection. Error: "
-					+ sql_excp);
-			sql_excp.printStackTrace();
-		}
-
-		if (DEBUG) {
-			System.out.println("end getRow()");
 		}
 	}
 
 	/**
 	 * Writes any blob to a file.
 	 * 
-	 * @param myBlob				The blob handle.
-	 * @param blobOutputFilePath	The output file path.
+	 * @param myBlob
+	 *            The blob handle.
+	 * @param blobOutputFilePath
+	 *            The output file path.
 	 */
 	public void writeBlobToFile(Blob myBlob, String blobOutputFilePath) {
 		if (DEBUG) {
@@ -298,6 +333,19 @@ public class BlobHandler {
 		if (DEBUG) {
 			System.out.println("end writeBlobToFile()");
 		}
+	}
+	
+	/**
+	 * Used to close the db connection.
+	 */
+	public void closeDbConn(){
+		try {
+			myConn.close();
+			conn01.close();
+		} catch (Exception e) {
+			System.err.println("Exception occured when trying to close db connection.");
+			e.printStackTrace();
+		} 
 	}
 
 }
