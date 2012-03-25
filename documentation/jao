@@ -46,6 +46,23 @@ cd SocialWebSpider
 	
 http://stackoverflow.com/questions/3697287/eclipse-set-maximum-line-length-for-auto-formatting
 	
+Design Notes related to crawler4j base code:
+	So, crawler4j was coded in a way that I was not able to make the code as general as I would like.
 	
+	Particularly in terms of how crawler4j has static references to "patterns". These patterns are determine what gets skipped and what gets downloaded. Since we wish to have multiple users with the possibilities of different filters on what they want to download. I was making this general, until I found I kill crawler4j without the static references... :(
 	
+	The next best solution I came up was making the crawler a base class, then extend it in such a way that I would have to change minimal info, e.g. just the patterns. By doing this, we'll need to have a class for each "type" of pattern we'll allow users to search for. Its a bit limiting, but works for what we are given. My other approach would of been nicer... but eh... working with others code, what can you expect right?
+	
+	I checked in an example of the crawler with image filters, and another class that extends it and uses the same filters. I created unit tests that test these cases to see if they behave as expected and they do.
+	
+	Another thing I did was make it so the spiders get their own Universally Unique Identifiers (UUID). The UUIDs are used to create folders which ensure we don't mix files (UUID is much better than a hash, as a hash can have collisions). Anyway, the example I found was simple and I already implement it in my code, which I have checked into GitHub.
+	
+	I have to leave shortly to go have dinner with the wife's parents. After that I'll be back and will continue programming.
+	
+	Have fun,
+	James
+	
+Add of MySQL driver to pom
+	http://mvnrepository.com/artifact/mysql/mysql-connector-java/5.1.18
+	Searched for jar depency tag at: http://mvnrepository.com/
 	
