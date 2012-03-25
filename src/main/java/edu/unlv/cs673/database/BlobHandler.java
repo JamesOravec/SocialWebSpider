@@ -25,10 +25,6 @@ import java.util.StringTokenizer;
  * simplified for reuse by: James Oravec (http://www.jamesoravec.com)
  */
 public class BlobHandler {
-
-	private static final boolean DEBUG = true;
-	private static final String CLASS_NAME = "BlobHandler";
-
 	/**
 	 * DB connection stuff.
 	 */
@@ -52,10 +48,6 @@ public class BlobHandler {
 	 * password are provided in the config.properties file.
 	 */
 	private void makeConnectionToMySQLDatabase() {
-		if (DEBUG) {
-			System.out.println("start makeConnectionToMySQLDatabase()");
-		}
-
 		Properties prop = new Properties();
 		try {
 			// load a properties file
@@ -66,12 +58,6 @@ public class BlobHandler {
 			dbUrl = prop.getProperty("dbUrl");
 			user = prop.getProperty("user");
 			password = prop.getProperty("password");
-
-			if (DEBUG) {
-				System.out.println("dbUrl: " + dbUrl);
-				System.out.println("user: " + user);
-				System.out.println("password: " + password);
-			}
 
 			// Connect to DB
 			Class.forName("com.mysql.jdbc.Driver");
@@ -84,10 +70,6 @@ public class BlobHandler {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
-		if (DEBUG) {
-			System.out.println("end makeConnectionToMySQLDatabase()");
-		}
 	}
 
 	/**
@@ -97,11 +79,11 @@ public class BlobHandler {
 	 * @param blobBinaryFolderPath
 	 */
 	public void insertBlobsFromFolder(int userId, String blobBinaryFolderPath, int userSpecificCategoryId) {
-		
+
 		System.out.println("userId: " + userId);
 		System.out.println("blobBinaryFolderPath: " + blobBinaryFolderPath);
 		System.out.println("userSpecificCategoryId: " + userSpecificCategoryId);
-		
+
 		// Insert each binary into the db.
 		String fileName;
 		File folder = new File(blobBinaryFolderPath);
@@ -111,11 +93,11 @@ public class BlobHandler {
 			if (listOfFiles[i].isFile()) {
 				fileName = listOfFiles[i].getName();
 				System.out.println(fileName);
-				insertBinaryMin(userId, fileName, blobBinaryFolderPath + "/" + fileName, userSpecificCategoryId);				
+				insertBinaryMin(userId, fileName, blobBinaryFolderPath + "/" + fileName, userSpecificCategoryId);
 			}
 		}
 	}
-	
+
 	/**
 	 * Inserts a blob into the database table.
 	 * 
@@ -134,7 +116,7 @@ public class BlobHandler {
 		System.out.println("blobFileName: " + blobFileName);
 		System.out.println("blobBinaryFilePath: " + blobBinaryFilePath);
 		System.out.println("userSpecificCategoryId: " + userSpecificCategoryId);
-		
+
 		String insertStmt = "INSERT INTO Blobs (userId, blobFileName, blobBinary, userSpecificCategoryId) VALUES(?, ?, ?, ?)";
 		String tableName = getTableName(insertStmt);
 		File blobFile = null;
@@ -156,13 +138,12 @@ public class BlobHandler {
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
-			} 
+			}
 			sql_excp.printStackTrace();
 		} catch (FileNotFoundException fnf) {
 			fnf.printStackTrace();
 		}
 	}
-	
 
 	/**
 	 * Inserts a blob into the database table.
@@ -194,7 +175,7 @@ public class BlobHandler {
 			pstmt01.setBinaryStream(ix++, fileInputStream, (int) blobFile.length());
 			pstmt01.setString(ix++, blobCaption);
 			pstmt01.executeUpdate();
-			
+
 			pstmt01.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
@@ -224,36 +205,28 @@ public class BlobHandler {
 			st.nextToken(); // discard first two words
 		}
 		tableName = st.nextToken();
-		if (DEBUG) {
-			System.out.println("tableName is " + tableName);
-		}
 		return tableName;
 	}
 
 	/**
-	 * This is the method I use to get a specific row from the Blobs table. -
-	 * The blobs that I am getting from the database need to be stored as files
-	 * on my file system. They are written to the blobsIn subdirectory, which is
-	 * immediately below the directory containing my code.
+	 * Outputs a blob in the db to the specified output directory.
+	 * 
+	 * @param blobId
+	 *            The blob to retreive.
+	 * @param blobOutputDirectory
+	 *            Where to write the blob.
 	 */
 	public void getRow(int blobId, String blobOutputDirectory) {
 		String METHOD_NAME = "getRow()";
 		String blobFileName = "";
 
 		String tableName = "Blobs";
-		if (DEBUG) {
-			System.out.println(this.getClass().getName() + "." + METHOD_NAME + " -tableName is " + tableName);
-		}
 		String getStmt = "SELECT userId, blobFileName, blobBinary FROM " + tableName + " WHERE blobId = ?";
 
 		PreparedStatement pstmt01 = null;
 		ResultSet rs = null;
 
-		/* Execute the query.
-		 * 
-		 * Examine the result set, which should be a single row. The values from
-		 * the row are stored in Class variables.
-		 */
+		/* Execute the query and write the blob. */
 		int rowCount = 0;
 		try {
 			pstmt01 = conn01.prepareStatement(getStmt);
@@ -264,25 +237,21 @@ public class BlobHandler {
 				blobFileName = rs.getString("blobFileName").trim();
 				Blob blobBinary = rs.getBlob("blobBinary");
 				String blobOutputFilePath = blobOutputDirectory + "/" + blobFileName;
-				if (DEBUG) {
-					System.out.println("blobOutputFilePath: " + blobOutputFilePath);
-				}
-
 				writeBlobToFile(blobBinary, blobOutputFilePath);
 			}
 			pstmt01.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("42S02")) {
-				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Desired row of table " + tableName + " not found. Error: " + sql_excp);
+				System.err.println(METHOD_NAME + " - Desired row of table " + tableName + " not found. Error: " + sql_excp);
 				sql_excp.printStackTrace();
 			} else {
-				System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Error: " + sql_excp);
+				System.err.println(METHOD_NAME + " - Error: " + sql_excp);
 				sql_excp.printStackTrace();
 			}
 		}
-		
+
 		if (rowCount != 1) {
-			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Query failed to return exactly one result row.");
+			System.err.println(METHOD_NAME + " - Query failed to return exactly one result row.");
 		}
 	}
 
@@ -295,9 +264,6 @@ public class BlobHandler {
 	 *            The output file path.
 	 */
 	public void writeBlobToFile(Blob myBlob, String blobOutputFilePath) {
-		if (DEBUG) {
-			System.out.println("start writeBlobToFile()");
-		}
 		blobOutputFilePath = blobOutputFilePath.replace("\\", "/");
 		String METHOD_NAME = "writeBlobToFile()";
 
@@ -323,29 +289,25 @@ public class BlobHandler {
 			instream.close();
 			outstream.close();
 		} catch (IOException io_excp) {
-			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Error: " + io_excp);
+			System.err.println(METHOD_NAME + " - Error: " + io_excp);
 			io_excp.printStackTrace();
 		} catch (SQLException sql_excp) {
-			System.err.println(CLASS_NAME + "." + METHOD_NAME + " - Error: " + sql_excp);
+			System.err.println(METHOD_NAME + " - Error: " + sql_excp);
 			sql_excp.printStackTrace();
 		}
-
-		if (DEBUG) {
-			System.out.println("end writeBlobToFile()");
-		}
 	}
-	
+
 	/**
 	 * Used to close the db connection.
 	 */
-	public void closeDbConn(){
+	public void closeDbConn() {
 		try {
 			myConn.close();
 			conn01.close();
 		} catch (Exception e) {
 			System.err.println("Exception occured when trying to close db connection.");
 			e.printStackTrace();
-		} 
+		}
 	}
 
 }

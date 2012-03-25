@@ -12,32 +12,60 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 	 * Need access to a blob handler for storing blobs to the database.
 	 */
 	protected BlobHandler bh = null;
-	
-	public AbstractCrawlerController(){
+
+	/**
+	 * Default constructor.
+	 */
+	public AbstractCrawlerController() {
 		super();
 	}
-	
-	public void storeSpiderResults(int userId, int userSpecificCategoryId, String storageFolder){
-		
+
+	public void storeSpiderResults(int userId, int userSpecificCategoryId, String storageFolder) {
+
 	}
 
-	public void finishSpider(){
-		bh.closeDbConn();		
+	/**
+	 * Used for database connection clean up.
+	 */
+	public void finishSpider() {
+		bh.closeDbConn();
 	}
-	
+
+	/**
+	 * Setups the CrawlConfig, needed and used by crawler4j.
+	 * 
+	 * @param configFolder
+	 *            A unique folder where crawler4j can store its configuration
+	 *            files.
+	 * @param maxDepth
+	 *            Max depth of spidering.
+	 * @param politenessDelay
+	 *            Politeness delay when spidering.
+	 * @return
+	 */
 	public CrawlConfig setupCrawlConfig(final String configFolder, final int maxDepth, final int politenessDelay) {
-		// Set things up and call crawler4j to do our bidding...
+		/**
+		 * Set up the config so crawler4j to do our bidding...
+		 */
 		CrawlConfig config = new CrawlConfig();
 		config.setCrawlStorageFolder(configFolder);
 		config.setMaxDepthOfCrawling(maxDepth);
 		config.setPolitenessDelay(politenessDelay);
-		/**
-		 * Binary content requires the following line to be set to true.
-		 */
 		config.setIncludeBinaryContentInCrawling(true);
 		return config;
 	}
 
+	/**
+	 * Setups the CrawlController, needed and used by crawler4j.
+	 * 
+	 * @param entryPoint
+	 *            The entry point for our spidering.
+	 * @param config
+	 *            The CrawlConfig, used by crawler4j.
+	 * @return Returns the CrawlController that crawler4j can use.
+	 * @throws Exception
+	 *             Possible exceptions that can be thrown.
+	 */
 	public CrawlController setupCrawlController(final String entryPoint, CrawlConfig config) throws Exception {
 		PageFetcher pageFetcher = new PageFetcher(config);
 		RobotstxtConfig robotstxtConfig = new RobotstxtConfig();
@@ -46,6 +74,5 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 		controller.addSeed(entryPoint);
 		return controller;
 	}
-	
 
 }

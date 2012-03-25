@@ -1,12 +1,19 @@
 package edu.unlv.cs673.socialwebspider.spider.controller;
 
+/**
+ * This class is used to supply a various patterns that can be used for save or filtering out files during the crawler4j spidering process.
+ */
 public class Patterns {
+	/**
+	 * Default Constructor.
+	 */
 	public Patterns() {
+		super();
 	}
 	
-	public static String patternImage = ".*(\\.(bmp|gif|jpe?g|png|tiff?))$";
-	public static String filterOutNonImages = ".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf|rm|smil|wmv|swf|wma|zip|rar|gz))$";
+	public static String PATERN_IMAGES = ".*(\\.(bmp|gif|jpe?g|png|tiff?))$";
+	public static String FILTER_OUT_NON_IMAGES = ".*(\\.(css|js|mid|mp2|mp3|mp4|wav|avi|mov|mpeg|ram|m4v|pdf|rm|smil|wmv|swf|wma|zip|rar|gz))$";
 	
-	public static String patternGeneral = ".*(\\.(mid|mp2|mp3|mp4|wav|avi|mov|mpeg|m4v|pdf|bmp|wmv|wma|zip|rar|gz|gif|jpe?g|png|tiff?))$";
-	public static String filterOutNonGeneral = ".*(\\.(css|js|ram|rm|smil|swf))$";
+	public static String PATTERN_GENERAL = ".*(\\.(mid|mp2|mp3|mp4|wav|avi|mov|mpeg|m4v|pdf|bmp|wmv|wma|zip|rar|gz|gif|jpe?g|png|tiff?))$";
+	public static String FILTER_OUT_NON_GENERAL = ".*(\\.(css|js|ram|rm|smil|swf))$";
 }

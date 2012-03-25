@@ -31,9 +31,12 @@ public class CrawlerImagesOnlyImpl extends CrawlerImpl {
 	private int minImageSize;
 	
 	// These are patterns that need to be changed for different filtering.
-	private static Pattern patternToFilterOut = Pattern.compile(Patterns.filterOutNonImages);
-	private static Pattern patternToSave = Pattern.compile(Patterns.patternImage);
+	private static Pattern patternToFilterOut = Pattern.compile(Patterns.FILTER_OUT_NON_IMAGES);
+	private static Pattern patternToSave = Pattern.compile(Patterns.PATERN_IMAGES);
 	
+	/**
+	 * Default Constructor.
+	 */
 	public CrawlerImagesOnlyImpl() {
 		super();
 	}

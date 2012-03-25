@@ -22,7 +22,7 @@ public class CrawlControllerImplTest {
 
 		CrawlerControllerImpl crawlController = new CrawlerControllerImpl();
 		try {
-			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php", BinarySizes.twentyKb);
+			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
 		} catch (Exception e) {
 			fail("Exception occurred during crawling.");
 		}

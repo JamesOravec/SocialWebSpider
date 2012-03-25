@@ -30,7 +30,11 @@ import edu.unlv.cs673.database.BlobHandler;
  */
 public class CrawlerControllerImpl extends AbstractCrawlerController implements CrawlerController {
 
+	/**
+	 * Default constructor.
+	 */
 	public CrawlerControllerImpl() {
+		super();
 	}
 
 	@Override

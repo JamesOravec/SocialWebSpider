@@ -29,7 +29,11 @@ import edu.unlv.cs673.database.BlobHandler;
  * Updates/Modifications by: James Oravec (http://www.jamesoravec.com)
  */
 public class CrawlerImagesOnlyControllerImpl extends AbstractCrawlerController implements CrawlerController {
+	/**
+	 * Default Constructor.
+	 */
 	public CrawlerImagesOnlyControllerImpl() {
+		super();
 	}
 
 	@Override

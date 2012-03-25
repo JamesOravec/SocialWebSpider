@@ -36,7 +36,11 @@ import edu.unlv.cs673.socialwebspider.spider.Cryptography;
  */
 public class CrawlerImpl extends WebCrawler {
 	
+	/**
+	 * Default constructor.
+	 */
 	public CrawlerImpl() {
+		super();
 	}
 
 	private static File storageFolder;
@@ -44,8 +48,8 @@ public class CrawlerImpl extends WebCrawler {
 	private int minImageSize;
 	
 	// These are patterns that need to be changed for different filtering.
-	private static Pattern patternToFilterOut = Pattern.compile(Patterns.filterOutNonGeneral);
-	private static Pattern patternToSave = Pattern.compile(Patterns.patternGeneral);
+	private static Pattern patternToFilterOut = Pattern.compile(Patterns.FILTER_OUT_NON_GENERAL);
+	private static Pattern patternToSave = Pattern.compile(Patterns.PATTERN_GENERAL);
 
 	/**
 	 * Used to setup and configure the crawler.
