@@ -54,14 +54,6 @@ public class BlobHandler {
 	public static Connection myConn = null;
 	public static Connection conn01 = null;
 
-	/* Set the host variables. */
-	String MemberName = null;
-	String PictureFilename = null;
-	String DecodedBlobInPath = null;
-	File PictureFile = null;
-	FileInputStream PFStream = null;
-	String PictureCaption = null;
-
 	/**
 	 * Default constructor. Creates connection to database, so can insert blobs
 	 * into the db, etc.
@@ -108,7 +100,9 @@ public class BlobHandler {
 	public static void main(String[] args) {
 		System.out.println("Start connection creation");
 		BlobHandler b = new BlobHandler();
-		b.insertRow();
+		
+		//		String currentFile = new File(blobBinaryFilePath).getAbsolutePath();
+		b.insertRow(1, "jamesbtest1.jpg", "spider/images/jamesbtest1.jpg", "Picture of James, when he was skinny.");
 
 		System.out.println("End connection creation");
 	}
@@ -123,44 +117,39 @@ public class BlobHandler {
 	 * column; I am using setBinaryStream(). However, I used to use setBytes()
 	 * and still have the code for that if you need it: it needs a fairly
 	 * lengthy additional method to convert the files to byte arrays.
+	 * 
+	 * @param userId				Foreign key for user. e.g. 1 
+	 * @param blobFileName			e.g. "jamesbtest1.jpg"
+	 * @param blobBinaryFilePath	e.g. "spider/images/jamesbtest1.jpg" 
+	 * @param blobCaption			e.g. "Picture of James, when he was skinny."
 	 */
-	public void insertRow() {
+	public void insertRow(int userId, String blobFileName, String blobBinaryFilePath, String blobCaption) {
 		if (DEBUG) {
 			System.out.println("start insertRow()");
 		}
 
-		String METHOD_NAME = "insertRow()";
-		String insertStmt = "INSERT INTO Blobs (member_name, picture_filename, picture, picture_caption) VALUES(?, ?, ?, ?)";
-
-		// Get table name for errors.
+		String insertStmt = "INSERT INTO Blobs (userId, blobFileName, blobBinary, blobCaption) VALUES(?, ?, ?, ?)";
 		String tableName = getTableName(insertStmt);
-
-		String currentFile = new File("spider/images/jamesbtest1.jpg").getAbsolutePath();
-
-		/* Set the host variables. */
-		MemberName = "Big Daddy O";
-		PictureFilename = "jamesbtest1.jpg";
-		PictureFile = new File(currentFile);
-		PFStream = null;
-		PictureCaption = "Picture of James, when he was skinny.";
+		File blobFile = null;
+		blobFile = new File(blobBinaryFilePath);
+		FileInputStream fileInputStream = null;
 
 		try {
-			PFStream = new FileInputStream(PictureFile);
+			fileInputStream = new FileInputStream(blobFile);
 		} catch (FileNotFoundException fnf) {
 			fnf.printStackTrace();
 		}
 
 		/* Insert a single row. */
 		PreparedStatement pstmt01 = null;
-		int insertResponse = 0;
 		try {
 			pstmt01 = myConn.prepareStatement(insertStmt);
 			int ix = 1;
-			pstmt01.setString(ix++, MemberName);
-			pstmt01.setString(ix++, PictureFilename);
-			pstmt01.setBinaryStream(ix++, PFStream, (int) PictureFile.length());
-			pstmt01.setString(ix++, PictureCaption);
-			insertResponse = pstmt01.executeUpdate();
+			pstmt01.setInt(ix++, userId);
+			pstmt01.setString(ix++, blobFileName);
+			pstmt01.setBinaryStream(ix++, fileInputStream, (int) blobFile.length());
+			pstmt01.setString(ix++, blobCaption);
+			pstmt01.executeUpdate();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -187,7 +176,7 @@ public class BlobHandler {
 	}
 
 	/**
-	 * Gets the table name out of an insert statement.
+	 * Gets the table name out of an insert statement. Useful for errors.
 	 * 
 	 * @param insertStmt	Insert statement to be parsed.
 	 * @return				The table name.
@@ -218,6 +207,8 @@ public class BlobHandler {
 		}
 
 		String METHOD_NAME = "getRow()";
+		String blobFileName = "";
+		String blobCaption = "";
 
 		String tableName = "Blobs";
 		if (DEBUG) {
@@ -280,11 +271,10 @@ public class BlobHandler {
 		try {
 			while (rs.next()) {
 				rowCount++;
-				MemberName = rs.getString("MEMBER_NAME").trim();
-				PictureFilename = rs.getString("PICTURE_FILENAME").trim();
-				Blob PictureBlob = rs.getBlob("PICTURE");
-				writeBlobToFile(PictureBlob, DecodedBlobOutPath, PictureFilename);
-				PictureCaption = rs.getString("PICTURE_CAPTION").trim();
+				blobFileName = rs.getString("blobFileName").trim();
+				Blob blobBinary = rs.getBlob("blobBinary");
+				writeBlobToFile(blobBinary, DecodedBlobOutPath, blobFileName);
+				blobCaption = rs.getString("blobCaption").trim();
 			}
 		} catch (SQLException sql_excp) {
 			String msg = CLASS_NAME + "." + METHOD_NAME + " - Encountered SQLException while reading query result set. Error: " + sql_excp;
