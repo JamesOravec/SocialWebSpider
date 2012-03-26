@@ -57,14 +57,5 @@ public class CrawlerControllerImpl extends AbstractCrawlerController implements 
 		CrawlerImpl crawler = new CrawlerImpl(minBinarySize);
 		CrawlerImpl.configure(crawlDomains, storageFolder);
 		controller.start(CrawlerImpl.class, numberOfCrawlers);
-		while(!controller.isFinished()){
-			Thread.sleep(1000);	// Wait until spider is done before continuing. Important for clean stuff.
-		}
-		controller.Shutdown();
-		while(!controller.isShuttingDown()){
-			Thread.sleep(1000);	// Wait until spider controller is shutdown.
-		}
-		controller = null;	// Final clean up to release any handles to files.
-		Runtime.getRuntime().gc();
 	}
 }
