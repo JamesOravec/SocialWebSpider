@@ -122,10 +122,13 @@ public class Spider {
 	 *            The URL to be processed.
 	 */
 	public final void processURL(final URL url) {
+		URLConnection connection = null;
+		InputStream is = null;
+		Reader r = null;
 		try {
 			log("Processing: " + url);
 			// get the URL's contents
-			URLConnection connection = url.openConnection();
+			connection = url.openConnection();
 			if ((connection.getContentType() != null) && !connection.getContentType().toLowerCase().startsWith("text/")) {
 				getWorkloadWaiting().remove(url);
 				getWorkloadProcessed().add(url);
@@ -134,16 +137,11 @@ public class Spider {
 			}
 
 			// read the URL
-			InputStream is = connection.getInputStream();
-			Reader r = new InputStreamReader(is);
+			is = connection.getInputStream();
+			r = new InputStreamReader(is);
 			// parse the URL
 			HTMLEditorKit.Parser parse = new HTMLParse().getParser();
 			parse.parse(r, new Parser(url), true);
-			is.close();
-
-			// JAO: Another attempt to kill all file streams from crawler4j.
-			connection.getInputStream().close();
-			connection.getOutputStream().close();
 			
 		} catch (IOException e) {
 			getWorkloadWaiting().remove(url);
@@ -151,6 +149,15 @@ public class Spider {
 			log("Error: " + url);
 			report.spiderURLError(url);
 			return;
+		} finally {
+			try {
+				r.close();
+				is.close();
+				connection.getInputStream().close();
+				connection.getOutputStream().close();
+			} catch (Exception e2) {
+				e2.printStackTrace();
+			}
 		}
 
 		// mark URL as complete

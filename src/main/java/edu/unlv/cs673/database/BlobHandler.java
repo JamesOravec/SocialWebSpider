@@ -129,7 +129,6 @@ public class BlobHandler {
 			pstmt01.setInt(ix++, userSpecificCategoryId);
 			pstmt01.executeUpdate();
 			pstmt01.close();
-			fileInputStream.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -139,6 +138,12 @@ public class BlobHandler {
 			fnf.printStackTrace();
 		} catch(Exception e){
 			e.printStackTrace();
+		} finally {
+			try{
+				fileInputStream.close();	
+			} catch (Exception e){
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -173,7 +178,6 @@ public class BlobHandler {
 			pstmt01.setString(ix++, blobCaption);
 			pstmt01.executeUpdate();
 			pstmt01.close();
-			fileInputStream.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -186,6 +190,12 @@ public class BlobHandler {
 			fnf.printStackTrace();
 		} catch(Exception e){
 			e.printStackTrace();
+		} finally {
+			try {
+				fileInputStream.close();
+			}catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -267,14 +277,16 @@ public class BlobHandler {
 		String METHOD_NAME = "writeBlobToFile()";
 
 		File binaryFile = new File(blobOutputFilePath);
+		FileOutputStream outstream = null;
+		InputStream instream = null;
 		try {
 			// Create the file if it doesn't exist.
 			if (!binaryFile.exists()) {
 				binaryFile.createNewFile();
 			}
 
-			FileOutputStream outstream = new FileOutputStream(binaryFile);
-			InputStream instream = myBlob.getBinaryStream();
+			outstream = new FileOutputStream(binaryFile);
+			instream = myBlob.getBinaryStream();
 
 			// Write binary in 4k chunks.
 			int chunk = 4096;
@@ -285,14 +297,19 @@ public class BlobHandler {
 			}
 
 			outstream.flush();
-			instream.close();
-			outstream.close();
 		} catch (IOException io_excp) {
 			System.err.println(METHOD_NAME + " - Error: " + io_excp);
 			io_excp.printStackTrace();
 		} catch (SQLException sql_excp) {
 			System.err.println(METHOD_NAME + " - Error: " + sql_excp);
 			sql_excp.printStackTrace();
+		} finally {
+			try {
+				instream.close();
+				outstream.close();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 

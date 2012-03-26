@@ -23,7 +23,7 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 
 	@Override
 	public void storeSpiderResults(int userId, String blobBinaryFolderPath, int userSpecificCategoryId) {
-			bh.insertBlobsFromFolder(userId, blobBinaryFolderPath, userSpecificCategoryId);
+		bh.insertBlobsFromFolder(userId, blobBinaryFolderPath, userSpecificCategoryId);
 	}
 
 	@Override
@@ -32,12 +32,34 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 		// Close db connection.
 		bh.closeDbConn();
 		System.out.println("End db close");
-		
+
 		System.out.println("Start delete folders");
 		// Delete temp folders.
 		FolderManipImpl fm = new FolderManipImpl();
+
+		// TODO: Get delete configFolder working properly.
+		/*
+		 * The delete of the configFolder is not working properly, it throws a
+		 * stack trace related to "Unable to delete file". We had the same issue
+		 * with the storageFolder and after some googling I found that the issue
+		 * was related to file streams not being closed properly. After some
+		 * time and reworking the code, I was able to get the storageFolder to
+		 * work properly. I spend a couple hours trying to get this to work for
+		 * the config folder as well, however it looks like the file handle is
+		 * being kept somewhere in the crawler4j code. I did extra per cautions
+		 * such as moving the close() into finally blocks, and looking through
+		 * the code many times to verify I didn't miss an open file stream.
+		 * Anyway, the config folders are only 8k each, so this will work
+		 * properly for our initial version of the project. Making a note and
+		 * TODO about this issue, in case things go smooth and we have more time
+		 * to look at this more.
+		 * 
+		 * http://stackoverflow.com/questions/2143217/unable-to-delete-a-file-after
+		 * -reading-it
+		 */
+		// fm.deleteFolder(configFolder); // This config folder looks to be
+		// created and held onto by crawler4j without proper close.
 		fm.deleteFolder(storageFolder);
-		fm.deleteFolder(configFolder);
 		System.out.println("End delete folders");
 	}
 

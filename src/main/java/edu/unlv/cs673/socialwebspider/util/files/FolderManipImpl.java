@@ -38,29 +38,6 @@ public class FolderManipImpl implements FolderManip {
 					
 			File folder = new File(fullPath);
 			FileUtils.deleteDirectory(folder);
-			
-			// The above apache common-io isn't working for the delete. 
-			// After looking on google, it might be an issue with how crawler4j is coded.
-			//		Reference: http://stackoverflow.com/questions/2143217/unable-to-delete-a-file-after-reading-it
-			// If they don't close the file handle, then I won't be able to delete the file.
-			// This is resuling in me trying a different method to delet the files/folder.
-			
-			// Reference: http://www.exampledepot.com/egs/java.lang/Exec.html
-			//
-			// Our hack to get around this issue is to use the native dos command for the delete.
-//		    String command = "rmdir \"" + fullPath + "\" /s /q";
-//		    System.out.println("command: " + command);
-//		    try{
-//			    Process child = Runtime.getRuntime().exec(command);
-//			    int exit = child.exitValue();
-//			    if(exit!=0){
-//			    	System.out.println("Error in executing delete command.");
-//			    }
-//		    } catch (IOException e){
-//		    	System.err.println("IOException occured when trying to delete folder.");
-//		    	e.printStackTrace();
-//		    }
-			
 		} catch (Exception e) {
 			System.err.println("Error deleting folder: " + path);
 			e.printStackTrace();
