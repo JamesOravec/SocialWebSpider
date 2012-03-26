@@ -81,7 +81,6 @@ public class CrawlerImpl extends WebCrawler {
 		if (patternToFilterOut.matcher(href).matches()) {
 			return false;
 		}
-
 		if (patternToSave.matcher(href).matches()) {
 			return true;
 		}
@@ -102,11 +101,9 @@ public class CrawlerImpl extends WebCrawler {
 		if (!(page.getParseData() instanceof BinaryParseData)) {
 			return;
 		}
-
 		if (!patternToSave.matcher(url).matches()) {
 			return;
 		}
-
 		// Not interested in very small binaries.
 		if (page.getContentData().length < minImageSize) {
 			return;

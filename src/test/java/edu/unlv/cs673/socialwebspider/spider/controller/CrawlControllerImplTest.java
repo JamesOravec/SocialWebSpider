@@ -23,12 +23,34 @@ public class CrawlControllerImplTest {
 
 		CrawlerControllerImpl crawlController = new CrawlerControllerImpl();
 		try {
-			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
+			crawlController.startNewCrawler(configFolder, 1, storageFolder, 1, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
 		} catch (Exception e) {
 			fail("Exception occurred during crawling.");
 		}
 
 		System.out.println("done");
 	}
+	
+	@Test
+	public void startSpiderTest() {
+		UUIDFactoryImpl UUIDFactory = new UUIDFactoryImpl();
+		String myUUID = UUIDFactory.generateUUID();
+		String configFolder = "spider/configs/" + myUUID;
+		String storageFolder = "spider/images/" + myUUID;
+
+		System.out.println("configFolder: " + configFolder);
+		System.out.println("storageFolder: " + storageFolder);
+
+		CrawlerControllerImpl crawlController = new CrawlerControllerImpl();
+		try {
+			crawlController.startSpider(3, -1134, configFolder, 1, storageFolder, 1, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
+		} catch (Exception e) {
+			fail("Exception occurred during crawling.");
+		}
+
+		System.out.println("done");
+	}
+	
+	
 
 }

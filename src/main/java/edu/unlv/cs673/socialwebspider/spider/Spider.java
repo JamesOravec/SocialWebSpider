@@ -6,6 +6,8 @@ import java.io.*;
 import javax.swing.text.*;
 import javax.swing.text.html.*;
 
+import com.mysql.jdbc.Connection;
+
 /**
  * That class implements a reusable spider
  * 
@@ -137,6 +139,12 @@ public class Spider {
 			// parse the URL
 			HTMLEditorKit.Parser parse = new HTMLParse().getParser();
 			parse.parse(r, new Parser(url), true);
+			is.close();
+
+			// JAO: Another attempt to kill all file streams from crawler4j.
+			connection.getInputStream().close();
+			connection.getOutputStream().close();
+			
 		} catch (IOException e) {
 			getWorkloadWaiting().remove(url);
 			getWorkloadError().add(url);
@@ -144,6 +152,7 @@ public class Spider {
 			report.spiderURLError(url);
 			return;
 		}
+
 		// mark URL as complete
 		getWorkloadWaiting().remove(url);
 		getWorkloadProcessed().add(url);

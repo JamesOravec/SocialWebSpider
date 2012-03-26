@@ -25,7 +25,7 @@ public class CrawlerImagesOnlyImplTest {
 
 		CrawlerImagesOnlyControllerImpl crawlController = new CrawlerImagesOnlyControllerImpl();
 		try {
-			crawlController.startNewCrawler(configFolder, 1, storageFolder, 3, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
+			crawlController.startNewCrawler(configFolder, 1, storageFolder, 1, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
 		} catch (Exception e) {
 			fail("Exception occurred during crawling.");
 		}
@@ -45,7 +45,7 @@ public class CrawlerImagesOnlyImplTest {
 
 		CrawlerImagesOnlyControllerImpl crawlController = new CrawlerImagesOnlyControllerImpl();
 		try {
-			crawlController.startSpider(3, -1134, configFolder, 1, storageFolder, 2, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
+			crawlController.startSpider(3, -1134, configFolder, 1, storageFolder, 1, 20, "http://www.funnypix.ca/main.php", BinarySizes.TWENTY_KB);
 		} catch (Exception e) {
 			fail("Exception occurred during crawling.");
 		}

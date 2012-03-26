@@ -6,6 +6,7 @@ import edu.uci.ics.crawler4j.fetcher.PageFetcher;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtConfig;
 import edu.uci.ics.crawler4j.robotstxt.RobotstxtServer;
 import edu.unlv.cs673.database.BlobHandler;
+import edu.unlv.cs673.socialwebspider.util.files.FolderManipImpl;
 
 public abstract class AbstractCrawlerController implements CrawlerController {
 	/**
@@ -26,8 +27,18 @@ public abstract class AbstractCrawlerController implements CrawlerController {
 	}
 
 	@Override
-	public void finishSpider() {
+	public void finishSpider(String configFolder, String storageFolder) {
+		System.out.println("Start db close");
+		// Close db connection.
 		bh.closeDbConn();
+		System.out.println("End db close");
+		
+		System.out.println("Start delete folders");
+		// Delete temp folders.
+		FolderManipImpl fm = new FolderManipImpl();
+		fm.deleteFolder(storageFolder);
+		fm.deleteFolder(configFolder);
+		System.out.println("End delete folders");
 	}
 
 	@Override

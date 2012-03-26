@@ -129,6 +129,7 @@ public class BlobHandler {
 			pstmt01.setInt(ix++, userSpecificCategoryId);
 			pstmt01.executeUpdate();
 			pstmt01.close();
+			fileInputStream.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -136,6 +137,8 @@ public class BlobHandler {
 			sql_excp.printStackTrace();
 		} catch (FileNotFoundException fnf) {
 			fnf.printStackTrace();
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 
@@ -169,8 +172,8 @@ public class BlobHandler {
 			pstmt01.setBinaryStream(ix++, fileInputStream, (int) blobFile.length());
 			pstmt01.setString(ix++, blobCaption);
 			pstmt01.executeUpdate();
-
 			pstmt01.close();
+			fileInputStream.close();
 		} catch (SQLException sql_excp) {
 			if (sql_excp.getSQLState().equals("23505")) {
 				System.err.println("Row cannot be added to table " + tableName + "because another row with this key already exists.");
@@ -181,6 +184,8 @@ public class BlobHandler {
 			}
 		} catch (FileNotFoundException fnf) {
 			fnf.printStackTrace();
+		} catch(Exception e){
+			e.printStackTrace();
 		}
 	}
 

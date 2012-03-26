@@ -26,6 +26,7 @@ public class MySQLConnection{
 			// load a properties file
 			InputStream in = getClass().getResourceAsStream("/config.properties");
 			prop.load(in);
+			in.close();
 
 			// get the property value and print it out
 			dbUrl = prop.getProperty("dbUrl");

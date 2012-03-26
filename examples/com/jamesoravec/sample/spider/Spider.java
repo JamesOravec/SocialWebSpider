@@ -135,6 +135,7 @@ public class Spider {
 			// parse the URL
 			HTMLEditorKit.Parser parse = new HTMLParse().getParser();
 			parse.parse(r, new Parser(url), true);
+			is.close();
 		} catch (IOException e) {
 			getWorkloadWaiting().remove(url);
 			getWorkloadError().add(url);

@@ -42,7 +42,7 @@ public class CrawlerImagesOnlyControllerImpl extends AbstractCrawlerController i
 		startNewCrawler(configFolder, numberOfCrawlers, storageFolder, maxDepth, politenessDelay, entryPoint, minBinarySize);
 		bh = new BlobHandler();
 		storeSpiderResults(userId, storageFolder, userSpecificCategoryId);
-		finishSpider();
+		finishSpider(configFolder, storageFolder);
 	}
 
 	@Override
@@ -57,6 +57,17 @@ public class CrawlerImagesOnlyControllerImpl extends AbstractCrawlerController i
 		CrawlerImagesOnlyImpl.configure(crawlDomains, storageFolder);
 
 		controller.start(CrawlerImpl.class, numberOfCrawlers);
+		while(!controller.isFinished()){
+			Thread.sleep(1000);	// Wait until spider is done before continuing. Important for clean stuff.
+		}
+		controller.Shutdown();
+		while(!controller.isShuttingDown()){
+			Thread.sleep(1000);	// Wait until spider controller is shutdown.
+		}
+		// Final clean up attempt to release any handles to files.
+		config = null;		
+		controller = null;
+		Runtime.getRuntime().gc();
 	}
 
 }

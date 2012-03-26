@@ -48,8 +48,11 @@ public interface CrawlerController {
 
 	/**
 	 * Used for database connection clean up and thing else that needs to happen.
+	 * 
+	 * @param configFolder		Temp configure folder used by crawler4j.
+	 * @param storageFolder		Temp storage folder used by crawler4j.
 	 */
-	void finishSpider();
+	void finishSpider(String configFolder, String storageFolder);
 	
 	/**
 	 * Setups the CrawlConfig, needed and used by crawler4j.
